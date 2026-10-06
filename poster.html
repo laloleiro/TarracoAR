@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<title>Cartell Tàrraco AR</title>
+<style>
+  @page { size: A4; margin: 0; }
+  body { margin:0; font-family: Georgia, serif; color:#1b1b1b; background:#ccc; }
+  .nav { padding:10px 14px; font-family: system-ui, sans-serif; font-size:14px; }
+  .nav a { margin-right:10px; }
+  .sheet { width:210mm; height:297mm; box-sizing:border-box; padding:12mm; background:#e8e4da;
+           margin:10px auto; display:flex; flex-direction:column; gap:6mm; overflow:hidden; }
+  .kicker { margin:0; font-size:10pt; letter-spacing:.14em; text-transform:uppercase; color:#555; }
+  h1 { margin:0; font-size:32pt; font-weight:normal; color:#1d4e66; line-height:1.1; }
+  /* La foto debe ser EXACTAMENTE la que compilaste en targets.mind: sin recortar ni tapar */
+  .photo { width:100%; max-height:150mm; object-fit:contain; background:#fff; display:block; }
+  .hint { margin:0; font-size:10pt; color:#1d4e66; }
+  .bottom { display:grid; grid-template-columns:1fr 42mm; gap:8mm; align-items:end; margin-top:auto; }
+  .bottom p { margin:0 0 3mm; font-size:10pt; line-height:1.35; }
+  .bottom b { color:#1d4e66; }
+  #qr { width:42mm; height:42mm; background:#fff; padding:2mm; box-sizing:border-box; }
+  #qr img, #qr canvas { width:100% !important; height:100% !important; }
+  .cap { margin:2mm 0 0; font-size:8pt; text-align:center; }
+  @media print { body { background:none; } .nav { display:none; } .sheet { margin:0; } }
+</style>
+</head>
+<body>
+<div class="nav" id="nav"></div>
+<div class="sheet">
+  <p class="kicker">Tàrraco · Realitat augmentada</p>
+  <h1 id="name"></h1>
+  <img class="photo" id="photo" alt="">
+  <p class="hint">Escaneja el QR i apunta la càmera a aquesta foto · Escanea el QR y apunta la cámara a esta foto · Scan the QR and point your camera at this photo</p>
+  <div class="bottom">
+    <div id="texts"></div>
+    <div><div id="qr"></div><p class="cap">ar.html</p></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="points.js"></script>
+<script>
+  // 1) Pon aquí la URL real de tu GitHub Pages (con barra final)
+  const BASE = "https://TU-USUARIO.github.io/tarraco-ar/";
+
+  const id = new URLSearchParams(location.search).get("p") || POINTS[0].id;
+  const p = POINTS.find(x => x.id === id) || POINTS[0];
+
+  document.getElementById("nav").innerHTML = "Cartell: " +
+    POINTS.map(x => `<a href="?p=${x.id}">${x.name.ca}</a>`).join("") +
+    " · Ctrl/Cmd+P → Guardar como PDF (márgenes: ninguno, gráficos de fondo: sí)";
+  document.getElementById("name").textContent = p.name.ca;
+  document.title = "Cartell " + p.id;
+
+  const img = document.getElementById("photo");
+  img.src = "markers/" + p.id + ".jpg";   // misma imagen que compilaste
+  img.onerror = () => { img.alt = "Falta markers/" + p.id + ".jpg"; img.style.height = "100mm"; };
+
+  document.getElementById("texts").innerHTML = ["ca", "es", "en"].map(l =>
+    `<p><b>${p.name[l]}.</b> ${p.text[l]}</p>`).join("");
+
+  new QRCode(document.getElementById("qr"), {
+    text: BASE + "ar.html?p=" + p.id, width: 256, height: 256, correctLevel: QRCode.CorrectLevel.M
+  });
+</script>
+</body>
+</html>
