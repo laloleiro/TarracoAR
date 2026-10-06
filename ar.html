@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tàrraco AR</title>
+<script src="https://cdn.jsdelivr.net/npm/aframe@1.5.0/dist/aframe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+<style>
+  body { margin:0; font-family: Georgia, serif; }
+  #info { position:fixed; left:0; right:0; bottom:0; z-index:10; box-sizing:border-box; padding:12px 14px;
+          background:rgba(29,78,102,.92); color:#e8e4da; max-height:40%; overflow:auto; }
+  #info h2 { margin:0 0 4px; font-size:1.05rem; }
+  #info p { margin:4px 0; line-height:1.4; }
+  #info a { color:#fff; }
+  #info a:focus-visible { outline:3px solid #f2b705; outline-offset:2px; }
+</style>
+</head>
+<body>
+<div id="info"><h2 id="n"></h2><p id="x"></p><p id="h"></p><a id="b" href="index.html"></a></div>
+
+<a-scene mindar-image="imageTargetSrc: targets.mind; uiScanning: yes; filterMinCF: 0.0001; filterBeta: 0.001"
+         color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights"
+         vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+  <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+  <a-entity id="target" mindar-image-target="targetIndex: 0">
+    <!-- Ajusta scale / rotation / position según cada modelo -->
+    <a-gltf-model id="model" rotation="90 0 0" position="0 0 0" scale="1 1 1"></a-gltf-model>
+  </a-entity>
+</a-scene>
+
+<script src="points.js"></script>
+<script>
+  const lang = getLang();
+  const id = new URLSearchParams(location.search).get("p");
+  const i = Math.max(0, POINTS.findIndex(p => p.id === id));
+  const p = POINTS[i];
+  document.getElementById("target").setAttribute("mindar-image-target", "targetIndex: " + i);
+  document.getElementById("model").setAttribute("src", p.model);
+  document.getElementById("n").textContent = p.name[lang];
+  document.getElementById("x").textContent = p.text[lang];
+  document.getElementById("h").textContent = UI.hint[lang];
+  const b = document.getElementById("b");
+  b.textContent = UI.back[lang];
+  b.href = "index.html?l=" + lang;
+</script>
+</body>
+</html>

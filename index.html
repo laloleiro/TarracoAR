@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tàrraco AR</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
+<style>
+  :root { --sea:#1d4e66; --stone:#e8e4da; }
+  html, body { height:100%; margin:0; font-family: Georgia, "Times New Roman", serif; }
+  header { height:52px; box-sizing:border-box; display:flex; align-items:center; justify-content:space-between;
+           padding:0 14px; background:var(--sea); color:var(--stone); }
+  header h1 { font-size:1.05rem; margin:0; font-weight:normal; letter-spacing:.02em; }
+  header button { margin-left:4px; padding:5px 9px; border:1px solid var(--stone); background:none;
+                  color:var(--stone); border-radius:3px; font:inherit; cursor:pointer; }
+  header button[aria-pressed="true"] { background:var(--stone); color:var(--sea); }
+  #map { height:calc(100% - 52px); }
+  .pop p { margin:6px 0; line-height:1.4; }
+  a.ar { display:inline-block; padding:7px 12px; background:var(--sea); color:#fff; border-radius:3px; text-decoration:none; }
+  button:focus-visible, a:focus-visible { outline:3px solid #f2b705; outline-offset:2px; }
+</style>
+</head>
+<body>
+<header><h1 id="title"></h1><span id="langs"></span></header>
+<div id="map"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<script src="points.js"></script>
+<script>
+  let lang = getLang();
+  const map = L.map("map").setView([41.1165, 1.2565], 16);
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    { maxZoom: 19, attribution: "© OpenStreetMap" }).addTo(map);
+  const layer = L.layerGroup().addTo(map);
+
+  function render() {
+    document.documentElement.lang = lang;
+    document.getElementById("title").textContent = UI.title[lang];
+    document.getElementById("langs").innerHTML = ["ca", "es", "en"].map(l =>
+      `<button data-l="${l}" aria-pressed="${l === lang}">${l.toUpperCase()}</button>`).join("");
+    layer.clearLayers();
+    POINTS.forEach(p => {
+      L.marker([p.lat, p.lng]).addTo(layer).bindPopup(
+        `<div class="pop"><strong>${p.name[lang]}</strong><p>${p.text[lang]}</p>
+         <a class="ar" href="ar.html?p=${p.id}&l=${lang}">${UI.open[lang]}</a></div>`);
+    });
+  }
+  document.getElementById("langs").addEventListener("click", e => {
+    if (e.target.dataset.l) { lang = e.target.dataset.l; render(); }
+  });
+  render();
+</script>
+</body>
+</html>
