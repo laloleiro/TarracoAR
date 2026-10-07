@@ -17,15 +17,18 @@
 </style>
 </head>
 <body>
-<div id="info"><h2 id="n"></h2><p id="x"></p><p id="h"></p><a id="b" href="index.html"></a></div>
-
+<div id="info"><h2 id="n"></h2><p id="x"></p><p id="h"></p><p id="priv" style="font-size:.8rem;opacity:.85"></p><a id="b" href="index.html"></a></div>
+  
 <a-scene mindar-image="imageTargetSrc: targets.mind; uiScanning: yes; filterMinCF: 0.0001; filterBeta: 0.001"
          color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights"
          vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
   <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
   <a-entity id="target" mindar-image-target="targetIndex: 0">
     <!-- Ajusta scale / rotation / position según cada modelo -->
-    <a-gltf-model id="model" rotation="90 0 0" position="0 0 0" scale="1 1 1"></a-gltf-model>
+    <!-- El contenedor gira sobre el eje Z del marcador; el modelo va de pie dentro (rotation 90 0 0) -->
+    <a-entity animation="property: rotation; from: 0 0 0; to: 0 0 360; dur: 20000; easing: linear; loop: true">
+      
+    <a-gltf-model id="model" rotation="45 0 0" position="0 0 0" scale="1 1 1"></a-gltf-model>
   </a-entity>
 </a-scene>
 
@@ -40,6 +43,7 @@
   document.getElementById("n").textContent = p.name[lang];
   document.getElementById("x").textContent = p.text[lang];
   document.getElementById("h").textContent = UI.hint[lang];
+  document.getElementById("priv").textContent = UI.privacy[lang];
   const b = document.getElementById("b");
   b.textContent = UI.back[lang];
   b.href = "index.html?l=" + lang;
