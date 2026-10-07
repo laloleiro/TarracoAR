@@ -31,7 +31,11 @@ const UI = {
   title: { ca: "Tàrraco en realitat augmentada", es: "Tàrraco en realidad aumentada", en: "Tàrraco in augmented reality" },
   open:  { ca: "Veure en AR", es: "Ver en AR", en: "View in AR" },
   back:  { ca: "Torna al mapa", es: "Volver al mapa", en: "Back to map" },
-  hint:  { ca: "Apunta la càmera al cartell d'aquest punt.", es: "Apunta la cámara al cartel de este punto.", en: "Point your camera at this stop's poster." }
+  hint:  { ca: "Apunta la càmera al cartell d'aquest punt.", es: "Apunta la cámara al cartel de este punto.", en: "Point your camera at this stop's poster." },
+  privacy: {
+    ca: "La càmera només s'utilitza per detectar el cartell. No es grava ni s'envia cap imatge.",
+    es: "La cámara se usa solo para detectar el cartel. No se graba ni se envía ninguna imagen.",
+    en: "The camera is only used to detect the poster. No image is recorded or sent." }
 };
 
 function getLang() {
